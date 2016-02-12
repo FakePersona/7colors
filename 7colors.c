@@ -51,11 +51,11 @@ void init_board()
     {
       for(j=0;j<BOARD_SIZE;j++)
 	{
-	  board[j*BOARD_SIZE+i]='A' + (rand() % 7);
+	  set_cell(i,j,'A' + (rand() % 7));
 	}
     }
-  board[BOARD_SIZE-1]='^';
-  board[(BOARD_SIZE-1)*BOARD_SIZE + 1] = 'v';
+  set_cell(BOARD_SIZE-1,0,'^');
+  set_cell(0,BOARD_SIZE-1,'v');
 }
       
 /** Program entry point */
@@ -63,7 +63,7 @@ int main()
 {
    printf("\n\n  Welcome to the 7 wonders of the world of the 7 colors\n"
 	      "  *****************************************************\n\n"
-	 "Current board state:\n");
+	 "Current board state:\n\n");
    srand(time(NULL));
    init_board();
    print_board();
