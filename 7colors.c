@@ -3,7 +3,8 @@
 /* Cf. http://people.irisa.fr/Anne-Cecile.Orgerie/teaching2015.html  */
 
 #include <stdio.h>  /* printf */
-
+#include <time.h>
+#include <stdlib.h>
 
 /* We want a 30x30 board game by default */
 #define BOARD_SIZE 30 
@@ -43,14 +44,28 @@ void print_board()
    }
 }
 
-
+void init_board()
+{
+  int i,j;
+  for(i=0;i<BOARD_SIZE;i++)
+    {
+      for(j=0;j<BOARD_SIZE;j++)
+	{
+	  board[j*BOARD_SIZE+i]='A' + (rand() % 7);
+	}
+    }
+  board[BOARD_SIZE-1]='^';
+  board[(BOARD_SIZE-1)*BOARD_SIZE + 1] = 'v';
+}
+      
 /** Program entry point */
 int main() 
 {
    printf("\n\n  Welcome to the 7 wonders of the world of the 7 colors\n"
 	      "  *****************************************************\n\n"
 	 "Current board state:\n");
-   
+   srand(time(NULL));
+   init_board();
    print_board();
    
    return 0; // Everything went well
