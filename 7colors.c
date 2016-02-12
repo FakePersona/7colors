@@ -17,10 +17,13 @@
  */
 char board[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
 
-/** Retrieves the color of a given board cell */
+/** Retrieves the color of a given board cell. If out of bound return 0 */
 char get_cell(int x, int y) 
 {
+  if(x>=0 && x<BOARD_SIZE && y>=0 && y<BOARD_SIZE)
    return board[y*BOARD_SIZE + x];
+  else
+    return 0;
 }
 
 /** Changes the color of a given board cell */
@@ -43,7 +46,7 @@ void print_board()
       printf("\n");
    }
 }
-
+/* init_board with 7 colors and players colors*/
 void init_board()
 {
   int i,j;
@@ -57,7 +60,34 @@ void init_board()
   set_cell(BOARD_SIZE-1,0,'^');
   set_cell(0,BOARD_SIZE-1,'v');
 }
+
+int test_border(int x, int y, char player)
+{
+  return (get_cell(x-1,y)==player || get_cell(x+1,y)==player || get_cell(x,y-1)==player || get_cell(x,y+1)==player);  
+}
+void play(char color, char player)  
+{
+  int i,j,t=1;
+  while (t)
+    {
+      t=0;
       
+      for(i=0;i<BOARD_SIZE;i++)
+	{
+	  for(j=0;j<BOARD_SIZE;j++)
+	    {
+	      if(get_cell(i,j)==color && test_border(i,j,player))
+		{
+		  set_cell(i,j,player);
+		  t=1;
+		}
+	    }
+	}
+    }
+}
+      
+
+
 /** Program entry point */
 int main() 
 {
@@ -67,6 +97,15 @@ int main()
    srand(time(NULL));
    init_board();
    print_board();
-   
+   char color_play;
+   while (1)
+     {
+       printf("Joueur 1 ");
+       scanf("%c",&color_play);
+       play(color_play,'v');
+       printf("\n");
+       print_board();
+       
+     }
    return 0; // Everything went well
 }
