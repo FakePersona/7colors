@@ -129,6 +129,21 @@ void turn(char player)
   print_occupation();
 }
 
+/** Glouton player **/
+
+/* Finds out what index is associated to vector's minimal value */
+
+int min_index(int* t)
+{
+  int i, i_min;
+  for (i=0;i<7;i++)
+    {
+      if (t[i] < t[i_min])
+	i_min = i;
+    }
+  return i_min;
+}
+
 /** Program entry point */
 int main() 
 {
