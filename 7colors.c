@@ -61,11 +61,11 @@ void init_board()
   set_cell(0,BOARD_SIZE-1,'v');
 }
 
-/* Returns 1 iff 1 player occupies an adjacent case to (x,y) */
+/* Returns 1 iff 1 player occupies an adjacent case to (x,y) AND it is not occupied by a player*/
 
 int test_border(int x, int y, char player)
 {
-  return (get_cell(x-1,y)==player || get_cell(x+1,y)==player || get_cell(x,y-1)==player || get_cell(x,y+1)==player);  
+  return ((get_cell(x-1,y)==player || get_cell(x+1,y)==player || get_cell(x,y-1)==player || get_cell(x,y+1)==player) && get_cell(x,y) != 'v' && get_cell(x,y) != '^');  
 }
 
 /* Lets player play color */
@@ -135,13 +135,29 @@ void turn(char player)
 
 int min_index(int* t)
 {
-  int i, i_min;
+  int i, i_min = 0;
   for (i=0;i<7;i++)
     {
       if (t[i] < t[i_min])
 	i_min = i;
     }
   return i_min;
+}
+
+/* Figures out what the glouton move is */
+
+int glouton_strategy(char player) 
+{
+  int occurences[7] = {0};
+  int i, j;
+  for (i=0; i<BOARD_SIZE; i++) {
+    for (j=0; j<BOARD_SIZE; j++) 
+      {
+	if (test_border(i,j,player))
+	  (occurences[get_cell(i,j)-'A'])++;
+      }
+  }
+  return (min_index(occurences) + 'A');
 }
 
 /** Program entry point */
