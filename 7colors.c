@@ -61,10 +61,14 @@ void init_board()
   set_cell(0,BOARD_SIZE-1,'v');
 }
 
+/* Returns 1 iff 1 player occupies an adjacent case to (x,y) */
+
 int test_border(int x, int y, char player)
 {
   return (get_cell(x-1,y)==player || get_cell(x+1,y)==player || get_cell(x,y-1)==player || get_cell(x,y+1)==player);  
 }
+
+/* Lets player play color */
 void play(char color, char player)  
 {
   int i,j,t=1;
@@ -90,6 +94,8 @@ void play(char color, char player)
     }
 }
 
+/* Tests if more than half of the cells are attributed to one player, returns said player if it is the case */
+
 int finish()
 {
   if(c1>(BOARD_SIZE*BOARD_SIZE)/2)
@@ -100,6 +106,7 @@ int finish()
     return 0;
 }
 
+/* Prints occupatien percentages. Bugged as of 13/2 */
 
 void print_occupation()
 {
@@ -107,6 +114,9 @@ void print_occupation()
   printf("Joueur 1 : %f \n ",f1);
   printf("Joueur 2 : %f \n ",((float)c2/(float)CELLS));
 }
+
+/* Plays out a turn sequence for player */
+
 void turn(char player)
 {
   char color_play;
