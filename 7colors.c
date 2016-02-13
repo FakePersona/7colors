@@ -131,17 +131,19 @@ void turn(char player)
 
 /** Glouton player **/
 
-/* Finds out what index is associated to vector's minimal value */
+/* Finds out what index is associated to vector's max value */
 
-int min_index(int* t)
+int max_index(int* t)
 {
-  int i, i_min = 0;
+  int i, i_max = 0;
   for (i=0;i<7;i++)
     {
-      if (t[i] < t[i_min])
-	i_min = i;
+      if (t[i] >= t[i_max])
+	{
+	  i_max = i;
+	}
     }
-  return i_min;
+  return i_max;
 }
 
 /* Figures out what the glouton move is */
@@ -154,10 +156,23 @@ int glouton_strategy(char player)
     for (j=0; j<BOARD_SIZE; j++) 
       {
 	if (test_border(i,j,player))
-	  (occurences[get_cell(i,j)-'A'])++;
+	  {
+	    (occurences[get_cell(i,j)-'A'])++;
+	  }
       }
   }
-  return (min_index(occurences) + 'A');
+  return (max_index(occurences) + 'A');
+}
+
+/* Glouton turn execution Might want to factorise later on */
+
+void turn_glouton(char player)
+{
+  int color_played = glouton_strategy(player);
+  printf("Glouton played %c \n", color_played);
+  play(color_played,player);
+  print_board();
+  print_occupation();
 }
 
 /** Program entry point */
@@ -174,7 +189,7 @@ int main()
        turn('v');
        if(finish())
 	 break;
-       turn('^');
+       turn_glouton('^');
        if(finish())
 	 break;
      }
