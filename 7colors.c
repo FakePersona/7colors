@@ -68,27 +68,36 @@ int test_border(int x, int y, char player)
   return ((get_cell(x-1,y)==player || get_cell(x+1,y)==player || get_cell(x,y-1)==player || get_cell(x,y+1)==player) && get_cell(x,y) != 'v' && get_cell(x,y) != '^');  
 }
 
+/* Propagates a color to neighbours */
+
+void propagate(int x, int y, char color, char player) 
+{
+  if (player=='v')
+    c1++;
+  else
+    c2++;
+  set_cell(x,y,player);
+  if (get_cell(x+1,y) == color)
+    propagate(x+1,y,color,player);
+  if (get_cell(x-1,y) == color)
+    propagate(x-1,y,color,player);
+  if (get_cell(x,y+1) == color)
+    propagate(x,y+1,color,player);
+  if (get_cell(x,y-1) == color)
+    propagate(x,y-1,color,player);
+}
+
 /* Lets player play color */
 void play(char color, char player)  
 {
-  int i,j,t=1;
-  while (t)
+  int i,j;
+  for(i=0;i<BOARD_SIZE;i++)
     {
-      t=0;
-      
-      for(i=0;i<BOARD_SIZE;i++)
+      for(j=0;j<BOARD_SIZE;j++)
 	{
-	  for(j=0;j<BOARD_SIZE;j++)
+	  if(get_cell(i,j)==color && test_border(i,j,player))
 	    {
-	      if(get_cell(i,j)==color && test_border(i,j,player))
-		{
-		  set_cell(i,j,player);
-		  t=1;
-		  if(player=='v')
-		    c1++;
-		  else
-		    c2++;
-		}
+	      propagate(i,j,color,player);
 	    }
 	}
     }
