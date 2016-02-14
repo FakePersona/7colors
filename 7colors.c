@@ -39,12 +39,14 @@ void set_cell(int x, int y, char color)
  */
 void print_board() 
 {
-   int i, j;
-   for (i=0; i<BOARD_SIZE; i++) {
-      for (j=0; j<BOARD_SIZE; j++) 
-	 printf("%c", get_cell(i, j));
-      printf("\n");
-   }
+  int i, j;
+  for (i=0; i<BOARD_SIZE; i++) {
+    for (j=0; j<BOARD_SIZE; j++) 
+      {
+	printf("%c ", get_cell(i, j));
+      }
+    printf("\n");
+  }
 }
 /* init_board with 7 colors and players colors*/
 void init_board()
