@@ -6,6 +6,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 /* We want a 30x30 board game by default */
 #define BOARD_SIZE 30 
 #define CELLS BOARD_SIZE*BOARD_SIZE
@@ -17,6 +18,7 @@
  */
 char board[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
 int c1=1,c2=1;
+
 /** Retrieves the color of a given board cell. If out of bound return 0 */
 char get_cell(int x, int y) 
 {
@@ -117,6 +119,21 @@ int finish()
     return 0;
 }
 
+/* Finds out what index is associated to vector's max value */
+
+int max_index(int* t)
+{
+  int i, i_max = 0;
+  for (i=0;i<7;i++)
+    {
+      if (t[i] >= t[i_max])
+	{
+	  i_max = i;
+	}
+    }
+  return i_max;
+}
+
 /* Prints occupatien percentages. Bugged as of 13/2 */
 
 void print_occupation()
@@ -140,22 +157,47 @@ void turn(char player)
   print_occupation();
 }
 
-/** Glouton player **/
+/** Random player **/
 
-/* Finds out what index is associated to vector's max value */
+/* Figures out what the Random move is */
 
-int max_index(int* t)
+int random_strategy(char player) 
 {
-  int i, i_max = 0;
-  for (i=0;i<7;i++)
-    {
-      if (t[i] >= t[i_max])
-	{
-	  i_max = i;
-	}
+  int occurences[7] = {0};
+  int possible[7] = {0};
+  int possibilities = 0;
+  int i, j;
+  for (i=0; i<BOARD_SIZE; i++) {
+    for (j=0; j<BOARD_SIZE; j++) 
+      {
+	if (test_border(i,j,player))
+	  {
+	    (occurences[get_cell(i,j)-'A'])++;
+	  }
+      }
+  }
+  for (i=0; i< 7; i++){
+    if (occurences[i]) {
+      possible[possibilities]=i+'A';
+      possibilities++;
     }
-  return i_max;
+  }
+  int r = rand() % possibilities;
+  return (possible[r]);
 }
+
+/* Random turn execution Might want to factorise later on */
+
+void turn_random(char player)
+{
+  int color_played = random_strategy(player);
+  printf("Random played %c \n", color_played);
+  play(color_played,player);
+  print_board();
+  print_occupation();
+}
+
+/** Glouton player **/
 
 /* Figures out what the glouton move is */
 
@@ -189,7 +231,8 @@ void turn_glouton(char player)
 /** Program entry point */
 int main() 
 {
-   printf("\n\n  Welcome to the 7 wonders of the world of the 7 colors\n"
+  srand(time(NULL));
+  printf("\n\n  Welcome to the 7 wonders of the world of the 7 colors\n"
 	      "  *****************************************************\n\n"
 	 "Current board state:\n\n");
    srand(time(NULL));
@@ -197,10 +240,10 @@ int main()
    print_board();
    while (42)
      {
-       turn('v');
+       turn_random('v');
        if(finish())
 	 break;
-       turn_glouton('^');
+       turn_random('^');
        if(finish())
 	 break;
      }
