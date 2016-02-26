@@ -307,53 +307,100 @@ void turn_hegemon(char player)
   print_occupation();
 }
 
-/* I mixed foreseeing and hegemon, this is still a bit of code already done I guess
+/** Foreseeing player **/
 
+/* Figures out what the Foreseeing move is */
+
+int foreseeing_strategy(char player) 
+{
+  int position[7] = {0};
+  int i,j;
+  char col1,col2;
+  int count1, count2;
+  if (player =='v') 
+    count1 = c1;
+  else
+    count1 = c2;
+  char copie_board[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
+  for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+    copie_board[i] = board[i];
+  } 
   char copie_board_bis[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
+  /* Testing the first color */
   for (col1 = 'A'; col1 < 'H'; col1++) {
-    int position_bis[7] = {0};
-    
+    /* restoring original board */
+    if (player == 'v') 
+      c1 = count1;
+    else
+      c2 = count1;
     for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
       board[i] = copie_board[i];
     }  
-    
+    /* playing first turn */
     for (i=0; i<BOARD_SIZE; i++) {
       for (j=0; j<BOARD_SIZE; j++) 
 	{
 	  if (get_cell(i,j) == col1 && test_border(i, j, player))
 	    {
-	      propagate_hegemon(i,j,col1,player,position);
+	      propagate(i,j,col1,player);
 	    }
 	}
     }
-    
+    /* saving state after first turn */
+    if (player == 'v') 
+      count2 = c1;
+    else
+      count2 = c2;
     for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
       copie_board_bis[i] = board[i];
     }
-    
+    /* playing second color */
     for (col2 = 'A'; col2 < 'H'; col2++) {
-    
+      /* restoring to state after first turn */
+      if (player == 'v') 
+	c1 = count2;
+      else
+	c2 = count2;
       for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
 	board[i] = copie_board_bis[i];
       }  
-    
+      /* playing second turn */
       for (i=0; i<BOARD_SIZE; i++) {
 	for (j=0; j<BOARD_SIZE; j++) 
 	  {
 	    if (get_cell(i,j) == col2 && test_border(i, j, player))
 	      {
-		propagate_hegemon(i,j,col2,player,position_bis);
+		propagate(i,j,col2,player);
 	      }
 	  }
       }
+      if (player == 'v') {
+	if (c1 > position[col1 - 'A'])
+	  position[col1- 'A'] = c1;
+      }
+      else
+	{
+	if (c2 > position[col1 - 'A'])
+	  position[col1 - 'A'] = c2;
+	}
     }
-    
-    position[c1 -'A'] += position_bis[max_index(position_bis)];
   }
   for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
     board[i] = copie_board[i];
   }  
-*/
+  return (max_index(position) + 'A');
+}
+
+/* Glouton turn execution Might want to factorise later on */
+
+void turn_foreseeing(char player)
+{
+  int color_played = foreseeing_strategy(player);
+  printf("Foreseeing played %c \n", color_played);
+  play(color_played,player);
+  print_board();
+  print_occupation();
+}
 
 /** Program entry point */
 int main() 
@@ -367,10 +414,10 @@ int main()
    print_board();
    while (42)
      {
-       turn_glouton('v');
+       turn('v');
        if(finish())
 	 break;
-       turn_hegemon('^');
+       turn_foreseeing('^');
        if(finish())
 	 break;
      }
