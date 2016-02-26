@@ -9,7 +9,7 @@
 #include <time.h>
 /* We want a 30x30 board game by default */
 #define BOARD_SIZE 30 
-#define CELLS BOARD_SIZE*BOARD_SIZE
+#define CELLS (BOARD_SIZE*BOARD_SIZE)
 /** Represent the actual current board game 
  * 
  * NOTE: global variables are usually discouraged (plus encapsulation in
@@ -138,9 +138,9 @@ int max_index(int* t)
 
 void print_occupation()
 {
-  float f1=(float)c1/(float)CELLS;
+  float f1=((float)c1/(float)CELLS)*100;
   printf("Joueur 1 : %f \n ",f1);
-  printf("Joueur 2 : %f \n ",((float)c2/(float)CELLS));
+  printf("Joueur 2 : %f \n ",((float)c2/(float)CELLS)*100);
 }
 
 /* Plays out a turn sequence for player */
@@ -228,6 +228,133 @@ void turn_glouton(char player)
   print_occupation();
 }
 
+/** Hegemon player **/
+
+/* Figures out what the Hegemon move is */
+
+
+void propagate_hegemon(int x, int y, char color, char player, int* occurences) 
+{
+  occurences[color - 'A']+=3;
+  if (x == 0 || x == BOARD_SIZE -1) 
+    occurences[color - 'A']-=1;
+  if (y == 0 || y == BOARD_SIZE -1) 
+    occurences[color - 'A']-=1;
+  set_cell(x,y,player);
+  /* Propagating */
+  if (get_cell(x+1,y) == color)
+    propagate_hegemon(x+1,y,color,player,occurences);
+  if (get_cell(x-1,y) == color)
+    propagate_hegemon(x-1,y,color,player,occurences);
+  if (get_cell(x,y+1) == color)
+    propagate_hegemon(x,y+1,color,player,occurences);
+  if (get_cell(x,y-1) == color)
+    propagate_hegemon(x,y-1,color,player,occurences);
+  /* Looking for vacancies */
+  if (get_cell(x,y-1) == '^' || get_cell(x,y-1) == 'v')
+   occurences[color - 'A']-=1;
+  if (get_cell(x,y+1) == '^' || get_cell(x,y-1) == 'v')
+   occurences[color - 'A']-=1;
+  if (get_cell(x+1,y) == '^' || get_cell(x,y-1) == 'v')
+   occurences[color - 'A']-=1;
+  if (get_cell(x+1,y) == '^' || get_cell(x,y-1) == 'v')
+   occurences[color - 'A']-=1;
+}
+
+
+int hegemon_strategy(char player) 
+{
+  int position[7] = {0};
+  int i,j;
+  char col1;
+  char copie_board[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
+  for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+    copie_board[i] = board[i];
+  }  
+  for (col1 = 'A'; col1 < 'H'; col1++) {
+    /* restore board to original state */
+    for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+      board[i] = copie_board[i];
+    }  
+    /* virtually play one turn */
+    for (i=0; i<BOARD_SIZE; i++) {
+      for (j=0; j<BOARD_SIZE; j++) 
+	{
+	  if (get_cell(i,j) == col1 && test_border(i, j, player))
+	    {
+	      propagate_hegemon(i,j,col1,player,position);
+	    }
+	}
+    }
+  }
+  for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+    board[i] = copie_board[i];
+  }  
+  if (position[max_index(position)] > 0)
+    return (max_index(position) + 'A');
+  else
+    return (glouton_strategy(player));
+}
+
+/* Glouton turn execution Might want to factorise later on */
+
+void turn_hegemon(char player)
+{
+  int color_played = hegemon_strategy(player);
+  printf("Hegemon played %c \n", color_played);
+  play(color_played,player);
+  print_board();
+  print_occupation();
+}
+
+/* I mixed foreseeing and hegemon, this is still a bit of code already done I guess
+
+  char copie_board_bis[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
+  for (col1 = 'A'; col1 < 'H'; col1++) {
+    int position_bis[7] = {0};
+    
+    for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+      board[i] = copie_board[i];
+    }  
+    
+    for (i=0; i<BOARD_SIZE; i++) {
+      for (j=0; j<BOARD_SIZE; j++) 
+	{
+	  if (get_cell(i,j) == col1 && test_border(i, j, player))
+	    {
+	      propagate_hegemon(i,j,col1,player,position);
+	    }
+	}
+    }
+    
+    for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+      copie_board_bis[i] = board[i];
+    }
+    
+    for (col2 = 'A'; col2 < 'H'; col2++) {
+    
+      for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+	board[i] = copie_board_bis[i];
+      }  
+    
+      for (i=0; i<BOARD_SIZE; i++) {
+	for (j=0; j<BOARD_SIZE; j++) 
+	  {
+	    if (get_cell(i,j) == col2 && test_border(i, j, player))
+	      {
+		propagate_hegemon(i,j,col2,player,position_bis);
+	      }
+	  }
+      }
+    }
+    
+    position[c1 -'A'] += position_bis[max_index(position_bis)];
+  }
+  for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+    board[i] = copie_board[i];
+  }  
+*/
+
 /** Program entry point */
 int main() 
 {
@@ -240,10 +367,10 @@ int main()
    print_board();
    while (42)
      {
-       turn_random('v');
+       turn_glouton('v');
        if(finish())
 	 break;
-       turn_random('^');
+       turn_hegemon('^');
        if(finish())
 	 break;
      }
