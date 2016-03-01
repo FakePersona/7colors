@@ -11,13 +11,13 @@
 #define BOARD_SIZE 30 
 #define CELLS (BOARD_SIZE*BOARD_SIZE)
 
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define MAGENTA "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define LAST    "\x1b[37m"
+#define RED     "\x1b[41m"
+#define GREEN   "\x1b[42m"
+#define YELLOW  "\x1b[43m"
+#define BLUE    "\x1b[44m"
+#define MAGENTA "\x1b[45m"
+#define CYAN    "\x1b[46m"
+#define LAST    "\x1b[47m"
 #define RESET   "\x1b[0m"
 /** Represent the actual current board game 
  * 
