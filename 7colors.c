@@ -10,6 +10,15 @@
 /* We want a 30x30 board game by default */
 #define BOARD_SIZE 30 
 #define CELLS (BOARD_SIZE*BOARD_SIZE)
+
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define MAGENTA "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define LAST    "\x1b[37m"
+#define RESET   "\x1b[0m"
 /** Represent the actual current board game 
  * 
  * NOTE: global variables are usually discouraged (plus encapsulation in
@@ -45,7 +54,32 @@ void print_board()
   for (i=0; i<BOARD_SIZE; i++) {
     for (j=0; j<BOARD_SIZE; j++) 
       {
-	printf("%c ", get_cell(i, j));
+	switch(get_cell(i,j)) 
+	  {
+	  case 'A' : 
+	    printf(RED     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'B' : 
+	    printf(GREEN     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'C' : 
+	    printf(YELLOW     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'D' : 
+	    printf(MAGENTA     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'E' : 
+	    printf(CYAN     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'F' : 
+	    printf(BLUE     "%c "     RESET, get_cell(i, j));
+	    break;
+	  case 'G' : 
+	    printf(LAST     "%c "     RESET, get_cell(i, j));
+	    break;
+	  default:
+	    printf("%c ", get_cell(i,j));
+	  }
       }
     printf("\n");
   }
@@ -385,6 +419,10 @@ int foreseeing_strategy(char player)
 	}
     }
   }
+  if (player == 'v') 
+    c1 = count1;
+  else
+    c2 = count1;
   for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
     board[i] = copie_board[i];
   }  
@@ -414,7 +452,7 @@ int main()
    print_board();
    while (42)
      {
-       turn('v');
+       turn_hegemon('v');
        if(finish())
 	 break;
        turn_foreseeing('^');
