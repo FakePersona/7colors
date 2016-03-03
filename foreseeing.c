@@ -10,8 +10,8 @@ int foreseeing_strategy(char player)
 {
   int position[7] = {0};
   int i,j;
-  char col1,col2;
-  int count1, count2;
+  char col1;
+  int count1;
   if (player =='v') 
     count1 = c1;
   else
@@ -20,8 +20,7 @@ int foreseeing_strategy(char player)
   for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
     copie_board[i] = board[i];
   } 
-  char copie_board_bis[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
-  /* Testing the first color */
+    /* Testing the first color */
   for (col1 = 'A'; col1 < 'H'; col1++) {
     /* restoring original board */
     if (player == 'v') 
@@ -41,53 +40,20 @@ int foreseeing_strategy(char player)
 	    }
 	}
     }
-    /* saving state after first turn */
+    play(glouton_strategy(player),player);
     if (player == 'v') 
-      count2 = c1;
+      position[col1- 'A'] = c1;
     else
-      count2 = c2;
-    for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
-      copie_board_bis[i] = board[i];
-    }
-    /* playing second color */
-    for (col2 = 'A'; col2 < 'H'; col2++) {
-      /* restoring to state after first turn */
-      if (player == 'v') 
-	c1 = count2;
-      else
-	c2 = count2;
-      for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
-	board[i] = copie_board_bis[i];
-      }  
-      /* playing second turn */
-      for (i=0; i<BOARD_SIZE; i++) {
-	for (j=0; j<BOARD_SIZE; j++) 
-	  {
-	    if (get_cell(i,j) == col2 && test_border(i, j, player))
-	      {
-		propagate(i,j,col2,player);
-	      }
-	  }
-      }
-      if (player == 'v') {
-	if (c1 > position[col1 - 'A'])
-	  position[col1- 'A'] = c1;
-      }
-      else
-	{
-	if (c2 > position[col1 - 'A'])
-	  position[col1 - 'A'] = c2;
-	}
-    }
+      position[col1 - 'A'] = c2;
   }
-  if (player == 'v') 
-    c1 = count1;
-  else
-    c2 = count1;
-  for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
-    board[i] = copie_board[i];
-  }  
-  return (max_index(position) + 'A');
+if (player == 'v') 
+  c1 = count1;
+ else
+   c2 = count1;
+for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
+  board[i] = copie_board[i];
+ }  
+return (max_index(position) + 'A');
 }
 
 /* Glouton turn execution Might want to factorise later on */
