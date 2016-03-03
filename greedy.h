@@ -1,2 +1,2 @@
-int glouton_strategy(char player);
-void turn_glouton(char player);
+int greedy_strategy(char player);
+void turn_greedy(char player);

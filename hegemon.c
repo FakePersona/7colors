@@ -125,7 +125,7 @@ int hegemon_strategy(char player) {
   if (position[max_index(position)])
     return (max_index(position) + 'A');
   else
-    return (glouton_strategy(player));
+    return (greedy_strategy(player));
 }
 
 /* Glouton turn execution Might want to factorise later on */

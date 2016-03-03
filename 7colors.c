@@ -18,6 +18,7 @@ int c1=1,c2=1;
 /** Program entry point */
 int main() 
 {
+  int i,score=0;
   srand(time(NULL));
   printf("\n\n  Welcome to the 7 wonders of the world of the 7 colors\n"
 	      "  *****************************************************\n\n"
@@ -25,15 +26,28 @@ int main()
    srand(time(NULL));
    init_board();
    print_board();
-   while (42)
+   for (i=0;i<100;i++)
      {
-       turn_oracle('v',5);
-       if(finish())
-	 break;
-       turn_foreseeing('^');
-       if(finish())
-	 break;
+       init_board();
+       c1=1;
+       c2=1;
+       while (42)
+	 {
+	   turn_foreseeing('v');
+	   if(finish())
+	     break;
+	   turn_oracle('^',4);
+	   if(finish())
+	     break;
+	 }
+       if (finish()==1)
+	 {
+	   score +=1;
+	   printf("Joueur 1 a gagné\n");
+	 }
+       else
+	 printf("Joueur 2 a gagné\n");
      }
-   printf("Joueur %d",finish());
+   printf("Joueur 1 a gagne %d fois",score);
    return 0; // Everything went well
 }

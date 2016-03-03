@@ -4,7 +4,7 @@
 
 /* Figures out what the glouton move is */
 
-int glouton_strategy(char player) 
+int greedy_strategy(char player) 
 {
   int occurences[7] = {0};
   int i, j;
@@ -22,11 +22,11 @@ int glouton_strategy(char player)
 
 /* Glouton turn execution Might want to factorise later on */
 
-void turn_glouton(char player)
+void turn_greedy(char player)
 {
-  int color_played = glouton_strategy(player);
-  printf("Glouton played %c \n", color_played);
+  int color_played = greedy_strategy(player);
+  //printf("Glouton played %c \n", color_played);
   play(color_played,player);
-  print_board();
-  print_occupation();
+  //print_board();
+  //print_occupation();
 }

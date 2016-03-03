@@ -9,7 +9,7 @@
 int foreseeing_strategy(char player) 
 {
   int position[7] = {0};
-  int i,j;
+  int i,j,done;
   char col1;
   int count1;
   if (player =='v') 
@@ -22,6 +22,7 @@ int foreseeing_strategy(char player)
   } 
     /* Testing the first color */
   for (col1 = 'A'; col1 < 'H'; col1++) {
+    done = 0;
     /* restoring original board */
     if (player == 'v') 
       c1 = count1;
@@ -39,8 +40,18 @@ int foreseeing_strategy(char player)
 	      propagate(i,j,col1,player);
 	    }
 	}
+    }    
+    for (i=0; i<BOARD_SIZE; i++) {
+      for (j=0; j<BOARD_SIZE; j++) 
+	{
+	  if (test_border(i, j, player))
+	    {
+	      done +=1;
+	    }
+	}
     }
-    play(glouton_strategy(player),player);
+    if (done)
+      play(greedy_strategy(player),player);
     if (player == 'v') 
       position[col1- 'A'] = c1;
     else
@@ -62,10 +73,10 @@ return (max_index(position) + 'A');
 void turn_foreseeing(char player)
 {
   int color_played = foreseeing_strategy(player);
-  printf("Foreseeing played %c \n", color_played);
+  //  printf("Foreseeing played %c \n", color_played);
   play(color_played,player);
-  print_board();
-  print_occupation();
+  //print_board();
+  //print_occupation();
 }
 
 /* Oracle playah !*/
@@ -125,8 +136,8 @@ return (max_index(position) + 'A');
 void turn_oracle(char player, int n)
 {
   int color_played = oracle_strategy(player,n);
-  printf("Oracle played %c \n", color_played);
+  //printf("Oracle played %c \n", color_played);
   play(color_played,player);
-  print_board();
-  print_occupation();
+  //print_board();
+  //print_occupation();
 }

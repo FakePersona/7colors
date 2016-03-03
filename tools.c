@@ -62,13 +62,21 @@ void print_board()
 void init_board()
 {
   int i,j;
-  for(i=0;i<BOARD_SIZE;i++)
+  for (i=0;i<BOARD_SIZE;i++)
     {
-      for(j=0;j<BOARD_SIZE;j++)
+      for (j=i;j<BOARD_SIZE;j++)
 	{
 	  set_cell(i,j,'A' + (rand() % 7));
 	}
     }
+  for(i=0;i<BOARD_SIZE;i++)
+    {
+      for(j=0;j<i;j++)
+	{
+	  set_cell(i,j,get_cell(j,i));
+	}
+    }
+
   set_cell(BOARD_SIZE-1,0,'^');
   set_cell(0,BOARD_SIZE-1,'v');
 }
@@ -119,9 +127,9 @@ void play(char color, char player)
 
 int finish()
 {
-  if(c1>(BOARD_SIZE*BOARD_SIZE)/2)
+  if(c1>=(BOARD_SIZE*BOARD_SIZE)/2)
     return 1;
-  else if(c2>(BOARD_SIZE*BOARD_SIZE)/2)
+  else if(c2>=(BOARD_SIZE*BOARD_SIZE)/2)
     return 2;
   else
     return 0;
