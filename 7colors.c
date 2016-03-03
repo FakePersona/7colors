@@ -33,10 +33,10 @@ int main()
        c2=1;
        while (42)
 	 {
-	   turn_foreseeing('v');
+	   turn_oracle('v',3);
 	   if(finish())
 	     break;
-	   turn_oracle('^',3);
+	   turn_foreseeing('^');
 	   if(finish())
 	     break;
 	 }

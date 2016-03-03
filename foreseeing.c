@@ -9,7 +9,7 @@
 int foreseeing_strategy(char player) 
 {
   int position[7] = {0};
-  int i,j,done;
+  int i,j;
   char col1;
   int count1;
   if (player =='v') 
@@ -22,7 +22,6 @@ int foreseeing_strategy(char player)
   } 
     /* Testing the first color */
   for (col1 = 'A'; col1 < 'H'; col1++) {
-    done = 0;
     /* restoring original board */
     if (player == 'v') 
       c1 = count1;
@@ -40,22 +39,19 @@ int foreseeing_strategy(char player)
 	      propagate(i,j,col1,player);
 	    }
 	}
-    }    
-    for (i=0; i<BOARD_SIZE; i++) {
-      for (j=0; j<BOARD_SIZE; j++) 
-	{
-	  if (test_border(i, j, player))
-	    {
-	      done +=1;
-	    }
-	}
     }
-    if (done)
-      play(greedy_strategy(player),player);
     if (player == 'v') 
-      position[col1- 'A'] = c1;
+      {
+	if (c1 != count1)
+	  play(greedy_strategy(player),player);
+	position[col1- 'A'] = c1;
+      }
     else
-      position[col1 - 'A'] = c2;
+      {
+	if (c2 != count1)
+	  play(greedy_strategy(player),player);
+      }
+    position[col1 - 'A'] = c2;
   }
 if (player == 'v') 
   c1 = count1;
@@ -73,10 +69,10 @@ return (max_index(position) + 'A');
 void turn_foreseeing(char player)
 {
   int color_played = foreseeing_strategy(player);
-  //  printf("Foreseeing played %c \n", color_played);
+  //printf("Foreseeing played %c \n", color_played);
   play(color_played,player);
   //print_board();
-  //print_occupation();
+  //  print_occupation();
 }
 
 /* Oracle playah !*/
@@ -84,7 +80,7 @@ void turn_foreseeing(char player)
 int oracle_strategy(char player, int n) 
 {
   int position[7] = {0};
-  int i,j,done;
+  int i,j;
   char col1;
   int count1;
   if (player =='v') 
@@ -99,7 +95,6 @@ int oracle_strategy(char player, int n)
     return foreseeing_strategy(player);
     /* Testing the first color */
   for (col1 = 'A'; col1 < 'H'; col1++) {
-    done = 0;
     /* restoring original board */
     if (player == 'v') 
       c1 = count1;
@@ -118,21 +113,18 @@ int oracle_strategy(char player, int n)
 	    }
 	}
     }
-    for (i=0; i<BOARD_SIZE; i++) {
-      for (j=0; j<BOARD_SIZE; j++) 
-	{
-	  if (test_border(i, j, player))
-	    {
-	      done +=1;
-	    }
-	}
-    }
-    if (done)
-      play(oracle_strategy(player,n-1),player);
-    if (player == 'v') 
-      position[col1- 'A'] = c1;
+    if (player == 'v')
+      { 
+	if (c1 != count1)
+	  play(oracle_strategy(player,n-1),player);
+	position[col1- 'A'] = c1;
+      }
     else
-      position[col1 - 'A'] = c2;
+      {
+	if (c2 != count1)
+	  play(oracle_strategy(player,n-1),player);
+	position[col1 - 'A'] = c2;
+      }
   }
 if (player == 'v') 
   c1 = count1;
