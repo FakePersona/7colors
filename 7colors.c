@@ -27,10 +27,10 @@ int main()
    print_board();
    while (42)
      {
-       turn_foreseeing('v');
+       turn_oracle('v',5);
        if(finish())
 	 break;
-       turn_hegemon('^');
+       turn_foreseeing('^');
        if(finish())
 	 break;
      }
