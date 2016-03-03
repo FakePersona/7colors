@@ -36,7 +36,7 @@ int main()
 	   turn_foreseeing('v');
 	   if(finish())
 	     break;
-	   turn_oracle('^',4);
+	   turn_oracle('^',3);
 	   if(finish())
 	     break;
 	 }
