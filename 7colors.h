@@ -1,0 +1,31 @@
+/* Template of the 7 wonders of the world of the 7 colors assigment. */
+
+/* Cf. http://people.irisa.fr/Anne-Cecile.Orgerie/teaching2015.html  */
+
+#include <stdio.h>  /* printf */
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/* We want a 30x30 board game by default */
+#define BOARD_SIZE 30 
+#define CELLS (BOARD_SIZE*BOARD_SIZE)
+
+#define RED     "\x1b[41m"
+#define GREEN   "\x1b[42m"
+#define YELLOW  "\x1b[43m"
+#define BLUE    "\x1b[44m"
+#define MAGENTA "\x1b[45m"
+#define CYAN    "\x1b[46m"
+#define LAST    "\x1b[47m"
+#define RESET   "\x1b[0m"
+/** Represent the actual current board game 
+ * 
+ * NOTE: global variables are usually discouraged (plus encapsulation in
+ *  an appropriate data structure would also be preferred), but don't worry. 
+ *  For this first assignment, no dinosaure will get you if you do that. 
+ */
+extern char board[BOARD_SIZE * BOARD_SIZE]; // Filled with zeros
+extern int c1,c2;
+

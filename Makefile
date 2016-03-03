@@ -1,7 +1,17 @@
-all: 7colors
+TARGET		= 7colors
+C_FILES	= $(wildcard *.c)
+H_FILES	= $(wildcard *.h)
+O_FILES = 	$(C_FILES:%.c=%.o)
 
-7colors: 7colors.o
-	gcc 7colors.o -o 7colors
+all: $(TARGET)
 
-7colors.o: 7colors.c
-	gcc -Wall -Werror -Wextra 7colors.c -c -g
+$(O_FILES): %.o: %.c $(H_files) Makefile
+	gcc -Wall -Wextra $*.c -c
+
+$(TARGET): %: $(O_FILES) Makefile
+	gcc -Wall -Wextra $(O_FILES) -o $*
+
+clean:
+	-rm -f $(O_FILES) $(TARGET) *.orig
+	-rm -rf *.dSYM
+

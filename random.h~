@@ -1,0 +1,2 @@
+int random_strategy(char player);
+void turn_random(player);
