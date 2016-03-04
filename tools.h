@@ -9,3 +9,5 @@ void play(char color, char player);
 int finish(void);
 void print_occupation(void);
 int max_index(int* t);
+int get_count(char player);
+void set_count(char player, int n);

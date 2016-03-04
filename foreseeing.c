@@ -9,9 +9,9 @@
 int foreseeing_strategy(char player) 
 {
   int position[7] = {0};
-  int i,j;
+  int i,max_i=0;
   char col1;
-  int count1;
+  int count1,count2,max_count=0;
   if (player =='v') 
     count1 = c1;
   else
@@ -21,7 +21,34 @@ int foreseeing_strategy(char player)
     copie_board[i] = board[i];
   } 
     /* Testing the first color */
-  for (col1 = 'A'; col1 < 'H'; col1++) {
+  for (col1 = 'A'; col1 < 'H'; col1++) { 
+    /* playing first turn */
+    play(col1,player);
+    if (player == 'v') 
+      {
+	count2=c1;
+	play(greedy_strategy(player),player);
+	position[col1- 'A'] = c1;
+      }
+    else
+      {
+        count2=c2;
+	play(greedy_strategy(player),player);
+	position[col1 - 'A'] = c2;
+      }
+    if (position[max_i] == position[col1-'A'])
+      {
+	if (count2 > max_count)
+	  {
+	    max_i = col1-'A';
+	    max_count = count2;
+	  }
+      }
+    if (position[max_i] < position[col1-'A'])
+      {
+	    max_i = col1-'A';
+	    max_count = count2;
+      }
     /* restoring original board */
     if (player == 'v') 
       c1 = count1;
@@ -29,38 +56,9 @@ int foreseeing_strategy(char player)
       c2 = count1;
     for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
       board[i] = copie_board[i];
-    }  
-    /* playing first turn */
-    for (i=0; i<BOARD_SIZE; i++) {
-      for (j=0; j<BOARD_SIZE; j++) 
-	{
-	  if (get_cell(i,j) == col1 && test_border(i, j, player))
-	    {
-	      propagate(i,j,col1,player);
-	    }
-	}
-    }
-    if (player == 'v') 
-      {
-	if (c1 != count1)
-	  play(greedy_strategy(player),player);
-	position[col1- 'A'] = c1;
-      }
-    else
-      {
-	if (c2 != count1)
-	  play(greedy_strategy(player),player);
-      }
-    position[col1 - 'A'] = c2;
+    } 
   }
-if (player == 'v') 
-  c1 = count1;
- else
-   c2 = count1;
-for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
-  board[i] = copie_board[i];
- }  
-return (max_index(position) + 'A');
+return max_i+'A';
 }
 
 
@@ -77,63 +75,48 @@ void turn_foreseeing(char player)
 
 /* Oracle playah !*/
 
-int oracle_strategy(char player, int n) 
+int oracle_strategy(char player,int n) 
 {
   int position[7] = {0};
-  int i,j;
+  int i,max_i=0;
   char col1;
-  int count1;
-  if (player =='v') 
-    count1 = c1;
-  else
-    count1 = c2;
+  int count1,count2,max_count=0;
+  count1 = get_count(player);
   char copie_board[BOARD_SIZE * BOARD_SIZE] = { 0 }; // Filled with zeros
   for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
     copie_board[i] = board[i];
-  }
+  } 
   if (n==2)
     return foreseeing_strategy(player);
     /* Testing the first color */
-  for (col1 = 'A'; col1 < 'H'; col1++) {
+  for (col1 = 'A'; col1 < 'H'; col1++) { 
+    /* playing first turn */
+    play(col1,player);
+    count2=get_count(player);
+    for (i=1;i<n-1;i++)    
+      play(oracle_strategy(player,n-i),player);
+    play(greedy_strategy(player),player);
+    position[col1- 'A'] = get_count(player);
+    if (position[max_i] == position[col1-'A'])
+      {
+	if (count2 > max_count)
+	  {
+	    max_i = col1-'A';
+	    max_count = count2;
+	  }
+      }
+    if (position[max_i] < position[col1-'A'])
+      {
+	    max_i = col1-'A';
+	    max_count = count2;
+      }
     /* restoring original board */
-    if (player == 'v') 
-      c1 = count1;
-    else
-      c2 = count1;
+    set_count(player,count1);
     for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
       board[i] = copie_board[i];
-    }  
-    /* playing first turn */
-    for (i=0; i<BOARD_SIZE; i++) {
-      for (j=0; j<BOARD_SIZE; j++) 
-	{
-	  if (get_cell(i,j) == col1 && test_border(i, j, player))
-	    {
-	      propagate(i,j,col1,player);
-	    }
-	}
-    }
-    if (player == 'v')
-      { 
-	if (c1 != count1)
-	  play(oracle_strategy(player,n-1),player);
-	position[col1- 'A'] = c1;
-      }
-    else
-      {
-	if (c2 != count1)
-	  play(oracle_strategy(player,n-1),player);
-	position[col1 - 'A'] = c2;
-      }
+    } 
   }
-if (player == 'v') 
-  c1 = count1;
- else
-   c2 = count1;
-for (i=0;i<BOARD_SIZE * BOARD_SIZE;i++) {
-  board[i] = copie_board[i];
- }  
-return (max_index(position) + 'A');
+return max_i+'A';
 }
 
 void turn_oracle(char player, int n)

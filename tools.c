@@ -159,6 +159,24 @@ void print_occupation()
   printf("Joueur 2 : %f \n ",((float)c2/(float)CELLS)*100);
 }
 
+/* manipulates count */
+
+int get_count(char player)
+{
+  if (player == 'v')
+    return c1;
+  else
+    return c2;
+}
+
+void set_count(char player, int n)
+{
+  if (player == 'v')
+    c1 = n;
+  else
+    c2 = n;
+}
+
 /* Plays out a turn sequence for player */
 
 void turn(char player)

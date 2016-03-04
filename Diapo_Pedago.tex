@@ -1,0 +1,70 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage[french]{babel}
+
+\begin{document}
+
+\begin{frame}
+\frametitle{Calcul de la complexité du tri bulle}
+
+Appliquons le tri bulle sur un tableau d'entiers de $\{1, \ldots, n\}$, et comptons le nombre de comparaisons effectuées.
+\pause
+  \begin{itemize}
+    \item Au premier passage, on parcours tous les éléments pour placer $n$ à la fin du tableau. Cela demande $n-1$ comparaisons.
+    \item Ensuite, on parcours les autres premiers éléments et on place $n-1$ en avant dernière position. Cela demande $n-2$ comparaisons.
+    \item On recommence jusqu'à avoir trié le tableau.
+    \item On a alors effectué $(n-1) + (n-2) + \ldots + 1$ comparaisons
+  \end{itemize}
+\pause
+Au total, il faut $\frac{n^2 - n}{2}$ comparaisons pour trier un tableau de taille $n$.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Analyse de complexité du tri bulle}
+
+L'algorithme du tri bulle sur un tableau de taille $n$ effectue $\frac{n^2-n}{2}$ comparaisons.
+
+Lorsque $n$ devient très grand, et en s'affranchissant des constantes multiplicatives, on écrit alors que la complexité est en $n^2$.
+
+\pause
+Cela signifie concrètement que pour trier un tableau de taille $2 n$, il faudra quatre fois plus de temps que pour trier un tableau de taille $n$.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Complexité du tri fusion}
+
+Notons $C_n$ le nombre de comparaisons effectués par le tri fusion pour un tableau de taille $n$.
+
+\pause
+Cette fois ci, si on trie un tableau de taille $2n$ :
+\begin{itemize}
+  \item On commence par trier les deux sous tableau de taille $n$. D'où $2 \times C_n$ comparaisons.
+  \item Puis on les combines en $2n$ comparaisons.
+\end{itemize}
+On obtient donc $C_{2n} = 2C_n + 2n$.
+
+On peut en déduire que la complexité est en $n \ln(n)$.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Comparaison des complexités.}
+% Il faudrait mettre une figure qui présente la courbe de n ln(n) et de n^2 ensemble sur cette frame.
+
+La complexité du tri bulle dépasse vite celle du tri fusion.
+
+Cette mesure est indépendante de l'ordinateur utilisé.
+
+%lancer la simulation.
+\end{frame}
+
+\end{document}
