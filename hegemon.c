@@ -133,8 +133,8 @@ int hegemon_strategy(char player) {
 void turn_hegemon(char player)
 {
   int color_played = hegemon_strategy(player);
-  printf("Hegemon played %c \n", color_played);
+  //  printf("Hegemon played %c \n", color_played);
   play(color_played,player);
-  print_board();
-  print_occupation();
+  //print_board();
+  //print_occupation();
 }

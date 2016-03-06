@@ -35,8 +35,8 @@ int random_strategy(char player)
 void turn_random(char player)
 {
   int color_played = random_strategy(player);
-  printf("Random played %c \n", color_played);
+  //printf("Random played %c \n", color_played);
   play(color_played,player);
-  print_board();
-  print_occupation();
+  //print_board();
+  //print_occupation();
 }
